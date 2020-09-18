@@ -48,10 +48,12 @@
 
 // The shortest time allowed between any 2 rising edges.  This should be at
 // least double TX_PULSE_WIDTH.
-#define TX_MINIMUM_SIGNAL   300.0
+//#define TX_MINIMUM_SIGNAL   300.0
+#define TX_MINIMUM_SIGNAL   400.0
 
 // The longest time allowed between any 2 rising edges for a normal signal.
-#define TX_MAXIMUM_SIGNAL  2500.0
+//#define TX_MAXIMUM_SIGNAL  2500.0
+#define TX_MAXIMUM_SIGNAL  3000.0
 
 // The default signal to send if nothing has been written.
 #define TX_DEFAULT_SIGNAL  1500.0
@@ -67,7 +69,8 @@
 // The minimum total frame size.  Some servo motors or other devices may not
 // work with pulses the repeat more often than 50 Hz.  To allow transmission
 // as fast as possible, set this to the same as TX_MINIMUM_SIGNAL.
-#define TX_MINIMUM_FRAME  20000.0
+//#define TX_MINIMUM_FRAME  20000.0
+#define TX_MINIMUM_FRAME  15000.0
 
 // The length of all transmitted pulses.  This must be longer than the worst
 // case interrupt latency, which depends on how long any other library may
@@ -75,11 +78,13 @@
 // Most libraries disable interrupts for no more than a few microseconds.
 // The OneWire library is a notable exception, so this may need to be lengthened
 // if a library that imposes unusual interrupt latency is in use.
-#define TX_PULSE_WIDTH      100.0
+//#define TX_PULSE_WIDTH      100.0
+#define TX_PULSE_WIDTH      300.
 
 // When receiving, any time between rising edges longer than this will be
 // treated as the end-of-frame marker.
-#define RX_MINIMUM_SPACE   3500.0
+//#define RX_MINIMUM_SPACE   3500.0
+#define RX_MINIMUM_SPACE   5000.
 
 // convert from microseconds to I/O clock ticks
 #define CLOCKS_PER_MICROSECOND (150./4)  // pcs 8+2
@@ -241,7 +246,8 @@ bool PulsePositionOutput::begin(uint8_t txPin, uint32_t _framePin)
 	attachInterruptVector(hardware[idx_channel].interrupt, hardware[idx_channel].isr);
 	tmr_ch->CSCTRL &= ~(TMR_CSCTRL_TCF1);  // clear
 	tmr_ch->CSCTRL |= TMR_CSCTRL_TCF1EN;  // enable interrupt
-	NVIC_SET_PRIORITY(hardware[idx_channel].interrupt, 32);
+	//NVIC_SET_PRIORITY(hardware[idx_channel].interrupt, 32);
+	NVIC_SET_PRIORITY(hardware[idx_channel].interrupt, 128);
 	NVIC_ENABLE_IRQ(hardware[idx_channel].interrupt);
 	tmr_ch->CTRL =  CTRL_SET;
 
